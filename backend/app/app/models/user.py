@@ -17,3 +17,4 @@ class User(Base):
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
     items = relationship("Item", back_populates="owner")
+    telegram_chat_id = Column(Integer, nullable=True)

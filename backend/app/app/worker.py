@@ -66,9 +66,9 @@ def processing(news_id: int):
         for symbol in  _classify_result["data"]:
             headline_favourite = HeadlineFavouriteCreate(
                                     headline_id=headline_.id,
-                                    favourite_id=symbol.id
+                                    favourite_id=symbol["id"]
                                 )
-            crud.headline_favourite.create(headline_favourite)
+            crud.headline_favourite.create(db, obj_in=headline_favourite)
                                     
     finally:
         db.close()

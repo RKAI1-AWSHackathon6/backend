@@ -17,6 +17,7 @@ def filter_headline(
     headline_filer: schemas.HeadlineBySentiment,
 
 ) -> Any:
+    headline_filer.user_id = 1
     return crud.headline.get_headline_by_sentiment(db=db, skip=skip, limit=limit, headline_filter=headline_filer)
 
 @router.get("/", response_model=List[schemas.Headline])

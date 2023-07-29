@@ -88,6 +88,8 @@ class Settings(BaseSettings):
     CLASSIFY_TEXT_URL: str
     CHECK_EMBEDDING_URL: str
     SUMMARY_URL: str
+    FIRST_SUPERUSER_TELEGRAM_ID: str = None
+    TELEGRAM_BOT_ID: str = None
 
     class Config:
         case_sensitive = True

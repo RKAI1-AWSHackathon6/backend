@@ -13,7 +13,7 @@ class CRUDCoinToken(CRUDBase[UserFavourite, UserFavouriteCreate, UserFavouriteUp
             self,
             db: Session,
             userid: int
-    ):
+    )->List[UserFavourite]:
         return (
             db.query(self.model)
               .filter(UserFavourite.user_id == userid)

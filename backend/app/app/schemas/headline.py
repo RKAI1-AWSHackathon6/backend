@@ -45,3 +45,4 @@ class HeadlineInDB(HeadlineInDBBase):
 
 class HeadlineBySentiment(BaseModel):
     sentiment_id: Optional[int]
+    user_id: Optional[int]

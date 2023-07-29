@@ -9,6 +9,7 @@ from app.schemas.headline import HeadlineCreate, HeadlineUpdate, HeadlineBySenti
 
 from .crud_headline_favourite import headline_favourite
 from .crud_coin import token
+from .crud_user_favourite import user_favourite
 
 class CRUDHeadline(CRUDBase[Headline, HeadlineCreate, HeadlineUpdate]):
     def get_headline_by_sentiment(
@@ -20,23 +21,23 @@ class CRUDHeadline(CRUDBase[Headline, HeadlineCreate, HeadlineUpdate]):
                     .limit(limit)
                     .all())
         
-        # for favourite in headline_favourite.get_headline_favourite(db, 2):
-        #     print(favourite.favourite_id)
-        #     print(token.get(db, favourite.favourite_id))
+        user_favourite_ = user_favourite.get_favourite_by_userid(db, userid=headline_filter.user_id)
+        
+        favourite_list = [uf.favourite_id for uf in user_favourite_ if uf.visible] if user_favourite_ is not None else []
 
-        favourites = {headline.id: [token.get(db, favourite.favourite_id) for favourite in headline_favourite.get_headline_favourite(db, headline.id)] for headline in headlines}
-        # print(favourites)
-        # print(headlines)
+        if favourite_list:
+            favourites = {headline.id: [token.get(db, favourite.favourite_id) for favourite in headline_favourite.get_headline_favourite(db, headline.id) if favourite.favourite_id in favourite_list] for headline in headlines}
+        else:
+            favourites = {headline.id: [token.get(db, favourite.favourite_id) for favourite in headline_favourite.get_headline_favourite(db, headline.id)] for headline in headlines}
 
+        filterd_headlines = []
         for idx, headline in enumerate(headlines):
             try:
-                # print(idx)
-                # print(headline.id)
-                # print(favourites[headline.id])
                 headlines[idx].favourites = [_token for _token in favourites[headline.id] if _token is not None]
+                if headlines[idx].favourites:
+                    filterd_headlines.append(headlines[idx])
             except Exception as e:
                 print(e)
-        # print(headlines[0].favourites)
-        return headlines
+        return filterd_headlines
 
 headline = CRUDHeadline(Headline)
