@@ -104,3 +104,6 @@ def verify_password_reset_token(token: str) -> Optional[str]:
         return decoded_token["email"]
     except jwt.JWTError:
         return None
+
+def mapping_headline_favourite():
+    pass

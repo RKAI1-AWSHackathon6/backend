@@ -82,8 +82,15 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_PASSWORD: str
     USERS_OPEN_REGISTRATION: bool = False
 
+    REDIS_HOST: str
+    REDIS_PASSWORD: str
+
+    CLASSIFY_TEXT_URL: str
+    CHECK_EMBEDDING_URL: str
+    SUMMARY_URL: str
+
     class Config:
         case_sensitive = True
-
+    
 
 settings = Settings()

@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-2023-04-17
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7-2023-04-17
 LABEL maintner="hungnv4@rikkeisoft.com"
 
 WORKDIR /app/
