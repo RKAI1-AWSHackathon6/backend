@@ -89,7 +89,8 @@ def send_telegram_message(headline_id):
         if related_tokens is None:
             return  # This is not related to any coin
         
-        user_ids = crud.user_favourite.get_user_by_favourite(db, related_tokens[0].favourite_id)
+        related_token_id = [hf.favourite_id for hf in related_tokens if hf is not None]
+        user_ids = crud.user_favourite.get_user_by_favourite(db, related_token_id)
         
         if user_ids is None:
             return # There are no user want this message
@@ -99,8 +100,8 @@ def send_telegram_message(headline_id):
         for user_id in user_ids:
             # Get user
             _user_info = crud.user.get(db, user_id.user_id)
-            if _user_info is not None and _user_info.telegram_id is not None:
-                _telegram_message = TelegramMessage(message_content, _user_info.telegram_id)
+            if _user_info is not None and _user_info.telegram_chat_id is not None:
+                _telegram_message = TelegramMessage(message_content, _user_info.telegram_chat_id)
                 client_telegram.send_message(_telegram_message)
         
     finally:
