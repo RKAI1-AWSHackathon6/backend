@@ -7,9 +7,12 @@ from app import crud
 
 from app import http_utils
 from app.schemas import HeadlineCreate, HeadlineFavouriteCreate
+from app.utils import build_message_content
+from app.my_telegram import TelegramSender, TelegramMessage
 
 client_sentry = Client(settings.SENTRY_DSN)
 
+client_telegram = TelegramSender()
 
 @celery_app.task()
 def processing(news_id: int):
@@ -70,6 +73,36 @@ def processing(news_id: int):
                                 )
             crud.headline_favourite.create(db, obj_in=headline_favourite)
                                     
+    finally:
+        db.close()
+
+@celery_app.task(acks_late=True)
+def send_telegram_message(headline_id):
+    try:
+        db = SessionLocal()
+        headline = crud.headline.get(db, headline_id)
+        if headline is None:
+            return
+        
+        # Get all related coin for this headline
+        related_tokens = crud.headline_favourite.get_headline_favourite(db, headline_id)
+        if related_tokens is None:
+            return  # This is not related to any coin
+        
+        user_ids = crud.user_favourite.get_user_by_favourite(db, related_tokens[0].favourite_id)
+        
+        if user_ids is None:
+            return # There are no user want this message
+
+        message_content = build_message_content(headline)
+
+        for user_id in user_ids:
+            # Get user
+            _user_info = crud.user.get(db, user_id.user_id)
+            if _user_info is not None and _user_info.telegram_id is not None:
+                _telegram_message = TelegramMessage(message_content, _user_info.telegram_id)
+                client_telegram.send_message(_telegram_message)
+        
     finally:
         db.close()
 

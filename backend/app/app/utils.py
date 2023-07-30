@@ -107,3 +107,6 @@ def verify_password_reset_token(token: str) -> Optional[str]:
 
 def mapping_headline_favourite():
     pass
+
+def build_message_content(headline):
+    return headline.title

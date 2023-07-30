@@ -23,6 +23,16 @@ def test_celery(
     return {"msg": "Word received"}
 
 
+@router.post("/test-telegram/", response_model=schemas.Msg, status_code=201)
+def test_telegram(
+    msg: schemas.Msg,
+) -> Any:
+    """
+    Test Celery worker.
+    """
+    celery_app.send_task("app.worker.send_telegram_message", args=[70])
+    return {"msg": "Word received"}
+
 @router.post("/test-email/", response_model=schemas.Msg, status_code=201)
 def test_email(
     email_to: EmailStr,
