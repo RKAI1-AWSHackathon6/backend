@@ -19,6 +19,18 @@ class CRUDCoinToken(CRUDBase[HeadlineFavourite, HeadlineFavouriteCreate, Headlin
               .filter(HeadlineFavourite.headline_id==headline_id)
               .all()
         )
+    
+    def get_lastest_headline_by_favourite(
+            self,
+            db: Session,
+            favourite_id: List[int]
+    ):
+        return (
+            db.query(self.model)
+              .filter(HeadlineFavourite.favourite_id.in_(favourite_id))
+              .order_by(self.model.id.desc())
+              .first()
+        )
 
 
 headline_favourite = CRUDCoinToken(HeadlineFavourite)

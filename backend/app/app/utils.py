@@ -112,7 +112,7 @@ def get_sentiment_text(sentiment):
     if sentiment == 1:
         return "NAGATIVE"
     elif sentiment == 2:
-        return "POSSITIVE"
+        return "POSITIVE"
     elif sentiment == 3:
         return "NEUTRAL"
     
@@ -122,5 +122,5 @@ def build_message_content(headline: Headline):
     msg = "[Title]\n " + headline.title + "\n\n"
     msg += "[Body]\n " + headline.body + "\n\n"
     msg += "[Source]\n " + headline.origin_link + "\n\n"
-    msg += "[Catetory] " + get_sentiment_text(headline.sentiment_id)
+    msg += "[Category] " + get_sentiment_text(headline.sentiment_id)
     return msg

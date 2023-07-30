@@ -40,4 +40,23 @@ class CRUDHeadline(CRUDBase[Headline, HeadlineCreate, HeadlineUpdate]):
                 print(e)
         return filterd_headlines
 
+    def get_latest_headline(self, db:Session, user_id: int):
+        
+        ufs = user_favourite.get_favourite_by_userid(db, userid=user_id)
+
+        if ufs is None:
+            return
+        
+        f_ids = [uf.favourite_id for uf in ufs if uf.visible]
+        if not f_ids:
+            return
+        
+        latest_headerline = headline_favourite.get_lastest_headline_by_favourite(db, f_ids)
+
+        if latest_headerline is None:
+            return 
+        
+        return self.get(db, latest_headerline.headline_id)
+
+
 headline = CRUDHeadline(Headline)
