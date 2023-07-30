@@ -37,6 +37,7 @@
 
 # from app.core.config import settings
 from telegram.ext import ContextTypes, Application
+import telegram
 import asyncio
 from threading import Thread
 import threading
@@ -98,11 +99,11 @@ class TelegramSender:
         user_data = context.job.data
         if user_data is not None and (user_data, TelegramMessage):
             print("Send message: " + user_data.message + " to " + str(user_data.chat_id))
-            await context.bot.send_message(chat_id=user_data.chat_id, text=user_data.message)
+            await context.bot.send_message(chat_id=user_data.chat_id, text=user_data.message, parse_mode=telegram.constants.ParseMode.MARKDOWN_V2)
                 
 
 if __name__ == "__main__":
     tls = TelegramSender()
     time.sleep(1)
-    tlmessage = TelegramMessage("Hello, how are you?", 1084622534)
+    tlmessage = TelegramMessage("Hello, *bold* how are you", 1084622534)
     tls.send_message(tlmessage)

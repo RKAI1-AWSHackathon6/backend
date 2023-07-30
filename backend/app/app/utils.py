@@ -8,7 +8,7 @@ from emails.template import JinjaTemplate
 from jose import jwt
 
 from app.core.config import settings
-
+from app.models.headlines import Headline
 
 def send_email(
     email_to: str,
@@ -108,5 +108,19 @@ def verify_password_reset_token(token: str) -> Optional[str]:
 def mapping_headline_favourite():
     pass
 
-def build_message_content(headline):
-    return headline.title
+def get_sentiment_text(sentiment):
+    if sentiment == 1:
+        return "NAGATIVE"
+    elif sentiment == 2:
+        return "POSSITIVE"
+    elif sentiment == 3:
+        return "NEUTRAL"
+    
+    return "NETRAL"
+
+def build_message_content(headline: Headline):
+    msg = "[Title]\n " + headline.title + "\n\n"
+    msg += "[Body]\n " + headline.body + "\n\n"
+    msg += "[Source]\n " + headline.origin_link + "\n\n"
+    msg += "[Catetory] " + get_sentiment_text(headline.sentiment_id)
+    return msg

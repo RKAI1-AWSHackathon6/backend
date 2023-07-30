@@ -72,7 +72,8 @@ def processing(news_id: int):
                                     favourite_id=symbol["id"]
                                 )
             crud.headline_favourite.create(db, obj_in=headline_favourite)
-                                    
+
+        celery_app.send_task("app.worker.send_telegram_message", args=[headline_.id])                            
     finally:
         db.close()
 
@@ -109,4 +110,5 @@ def send_telegram_message(headline_id):
 
 @celery_app.task(acks_late=True)
 def test_celery(word: str) -> str:
+    celery_app.send_task("app.worker.send_telegram_message", args=[70])
     return f"test task return {word}"

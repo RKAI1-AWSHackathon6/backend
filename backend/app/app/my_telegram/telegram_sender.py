@@ -1,5 +1,6 @@
 from app.core.config import settings
 from telegram.ext import ContextTypes, Application
+import telegram
 import asyncio
 from threading import Thread
 import threading
